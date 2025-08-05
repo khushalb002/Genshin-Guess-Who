@@ -616,6 +616,64 @@ const characters = [
 characters.forEach((c, i) => c.originalIndex = i);
 
 let crossedOutCount = 0;
+let isMobile = window.innerWidth <= 768;
+let isTablet = window.innerWidth > 768 && window.innerWidth <= 1024;
+
+// Handle screen orientation and resize
+function handleResize() {
+    const previousIsMobile = isMobile;
+    const previousIsTablet = isTablet;
+    
+    isMobile = window.innerWidth <= 768;
+    isTablet = window.innerWidth > 768 && window.innerWidth <= 1024;
+    
+    // Re-render if device type changed
+    if (previousIsMobile !== isMobile || previousIsTablet !== isTablet) {
+        updateStats();
+    }
+}
+
+// Add touch-friendly interactions
+function addTouchSupport(card) {
+    let touchStartTime = 0;
+    let touchMoved = false;
+    
+    card.addEventListener('touchstart', (e) => {
+        touchStartTime = Date.now();
+        touchMoved = false;
+        card.style.transform = 'scale(0.95) translateY(-2px)';
+    }, { passive: true });
+    
+    card.addEventListener('touchmove', () => {
+        touchMoved = true;
+        card.style.transform = '';
+    }, { passive: true });
+    
+    card.addEventListener('touchend', (e) => {
+        const touchDuration = Date.now() - touchStartTime;
+        card.style.transform = '';
+        
+        // Only trigger if it was a quick tap and not a scroll
+        if (!touchMoved && touchDuration < 500) {
+            e.preventDefault();
+            const index = parseInt(card.dataset.index);
+            toggleCrossOut(card, index);
+        }
+    });
+    
+    // Add visual feedback for hover on non-touch devices
+    if (!('ontouchstart' in window)) {
+        card.addEventListener('mouseenter', () => {
+            card.style.transform = 'translateY(-5px)';
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            if (!card.classList.contains('crossed-out')) {
+                card.style.transform = '';
+            }
+        });
+    }
+}
 
 function toggleTheme() {
     document.body.classList.toggle('light-mode');
@@ -627,6 +685,15 @@ function initializeTheme() {
 
 function initializeGame() {
     const gameGrid = document.getElementById('gameGrid');
+    
+    // Store current crossed-out state before clearing
+    const currentCrossedOut = new Set();
+    const existingCards = gameGrid.querySelectorAll('.character-card.crossed-out');
+    existingCards.forEach(card => {
+        const characterName = card.querySelector('.character-name').textContent;
+        currentCrossedOut.add(characterName);
+    });
+    
     gameGrid.innerHTML = '';
 
     characters.forEach((character, index) => {
@@ -642,7 +709,17 @@ function initializeGame() {
             <div class="character-traits">${character.traits}</div>
         `;
 
+        // Restore crossed-out state if it was previously crossed out
+        if (currentCrossedOut.has(character.name)) {
+            card.classList.add('crossed-out');
+        }
+
+        // Add click event for desktop
         card.addEventListener('click', () => toggleCrossOut(card, index));
+        
+        // Add touch support for mobile
+        addTouchSupport(card);
+        
         gameGrid.appendChild(card);
     });
 
@@ -661,6 +738,10 @@ function toggleCrossOut(card, index) {
 }
 
 function updateStats() {
+    // Recalculate crossed out count from actual DOM state
+    const crossedOutCards = document.querySelectorAll('.character-card.crossed-out');
+    crossedOutCount = crossedOutCards.length;
+    
     const remaining = characters.length - crossedOutCount;
     document.getElementById('remainingCount').textContent = `${remaining} characters remaining`;
     document.getElementById('crossedCount').textContent = `${crossedOutCount} crossed out`;
@@ -716,4 +797,23 @@ window.addEventListener('DOMContentLoaded', () => {
     initializeTheme();
     initializeGame();
     setupSortBar();
+    
+    // Add resize listener for responsive behavior
+    window.addEventListener('resize', handleResize);
+    
+    // Prevent zoom on double tap for iOS
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', (event) => {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 300) {
+            event.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, false);
+    
+    // Add viewport meta tag handling for better mobile experience
+    const viewport = document.querySelector('meta[name="viewport"]');
+    if (viewport) {
+        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+    }
 });
