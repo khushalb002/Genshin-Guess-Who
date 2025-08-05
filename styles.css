@@ -23,19 +23,22 @@ body.light-mode {
     max-width: 1500px;
     margin: 0 auto;
     position: relative;
+    padding-top: 50px; /* Add space for theme toggle */
 }
 
 .theme-toggle {
-    position: absolute;
-    top: 0;
-    right: 0;
+    position: fixed;
+    top: 20px;
+    right: 20px;
     width: 60px;
     height: 30px;
-    background: rgba(0,0,0,0.1);;
+    background: rgba(0,0,0,0.1);
     border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s ease;
     border: 2px solid rgba(255,255,255,0.2);
+    z-index: 1000;
+    backdrop-filter: blur(10px);
 }
 
 .light-mode .theme-toggle {
@@ -68,6 +71,7 @@ body:not(.light-mode) .theme-toggle::before {
 .header {
     text-align: center;
     margin-bottom: 30px;
+    margin-top: 10px; /* Add some top margin for better spacing */
 }
 
 .header h1 {
@@ -291,31 +295,303 @@ body.light-mode .sort-btn.active {
 .char-11 { background: linear-gradient(135deg, #43e97b, #38f9d7); }
 .char-12 { background: linear-gradient(135deg, #fa709a, #fee140); }
 
+/* Mobile and Tablet Responsive Design */
+@media (max-width: 1200px) {
+    .container {
+        max-width: 95%;
+        padding: 0 10px;
+    }
+    
+    .game-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 20px;
+        padding: 15px;
+    }
+}
+
 @media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        padding-top: 40px; /* Reduced padding for mobile */
+    }
+    
+    .theme-toggle {
+        width: 50px;
+        height: 25px;
+        top: 15px;
+        right: 15px;
+    }
+    
+    .theme-toggle::before {
+        width: 17px;
+        height: 17px;
+        top: 2px;
+        left: 2px;
+    }
+    
+    body:not(.light-mode) .theme-toggle::before {
+        left: 27px;
+    }
+    
+    .header {
+        margin-top: 5px; /* Reduced margin for mobile */
+    }
+    
+    .header h1 {
+        font-size: 2rem;
+        margin-bottom: 8px;
+    }
+    
+    .header p {
+        font-size: 1rem;
+        padding: 0 10px;
+    }
+    
+    .controls {
+        margin-top: 20px;
+        gap: 15px;
+    }
+    
+    #sortBar {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px !important;
+        margin-left: 0 !important;
+    }
+    
+    .sort-btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+        min-width: 80px;
+    }
+    
+    .reset-btn {
+        font-size: 1.4rem;
+        padding: 10px 20px;
+    }
+    
     .game-grid {
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
         gap: 15px;
         padding: 10px;
+        width: 100%;
+    }
+    
+    .character-card {
+        width: 120px;
+        height: 180px;
+        padding: 8px;
     }
     
     .character-portrait {
         width: 80px;
         height: 80px;
         font-size: 2rem;
+        margin-bottom: 8px;
     }
+    
+    .character-name {
+        font-size: 0.9rem;
+        margin-bottom: 3px;
+    }
+    
+    .character-traits {
+        font-size: 0.75rem;
+        line-height: 1.2;
+    }
+    
+    .stats {
+        margin-bottom: 20px;
+        font-size: 1rem;
+    }
+    
+    .stats span {
+        padding: 8px 15px;
+        margin: 5px;
+        display: inline-block;
+    }
+    
+    .footer {
+        margin-top: 30px;
+        padding: 0 10px;
+    }
+    
+    .footer-content {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .footer-text {
+        font-size: 0.8rem;
+        line-height: 1.4;
+    }
+}
 
-    .character-card {
-        width: 120px;
-        height: 200px;
-        padding: 10px;
+@media (max-width: 480px) {
+    .container {
+        padding-top: 35px; /* Even more reduced for small screens */
+    }
+    
+    .theme-toggle {
+        width: 45px;
+        height: 22px;
+        top: 10px;
+        right: 10px;
+    }
+    
+    .theme-toggle::before {
+        width: 14px;
+        height: 14px;
+        top: 2px;
+        left: 2px;
+    }
+    
+    body:not(.light-mode) .theme-toggle::before {
+        left: 25px;
+    }
+    
+    .header {
+        margin-top: 0;
     }
     
     .header h1 {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
+    
+    .header p {
+        font-size: 0.95rem;
+    }
+    
+    .game-grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 12px;
+        padding: 8px;
+    }
+    
+    .character-card {
+        width: 100px;
+        height: 160px;
+        padding: 6px;
+    }
+    
+    .character-portrait {
+        width: 70px;
+        height: 70px;
+        font-size: 1.8rem;
+        margin-bottom: 6px;
+    }
+    
+    .character-name {
+        font-size: 0.8rem;
+        margin-bottom: 2px;
+    }
+    
+    .character-traits {
+        font-size: 0.7rem;
+    }
+    
+    .character-card.crossed-out::before {
+        font-size: 3rem;
+    }
+    
+    .sort-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        min-width: 70px;
+    }
+    
+    .reset-btn {
+        font-size: 1.2rem;
+        padding: 8px 16px;
+    }
+    
+    .stats {
+        font-size: 0.9rem;
+    }
+    
+    .stats span {
+        padding: 6px 12px;
+        margin: 3px;
+        font-size: 0.85rem;
+    }
+}
 
+/* Landscape orientation for mobile devices */
+@media (max-width: 768px) and (orientation: landscape) {
+    .header {
+        margin-bottom: 15px;
+    }
+    
+    .header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 5px;
+    }
+    
+    .header p {
+        font-size: 0.9rem;
+    }
+    
     .controls {
-        margin-top: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        gap: 10px;
+    }
+    
+    .stats {
+        margin-bottom: 15px;
+    }
+    
+    .character-card {
+        height: 140px;
+    }
+    
+    .character-portrait {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 5px;
+    }
+    
+    .character-name {
+        font-size: 0.8rem;
+    }
+    
+    .character-traits {
+        font-size: 0.7rem;
+    }
+}
+
+/* Tablet specific styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .game-grid {
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 18px;
+        padding: 15px;
+    }
+    
+    .character-card {
+        width: 130px;
+        height: 190px;
+        padding: 12px;
+    }
+    
+    .character-portrait {
+        width: 90px;
+        height: 90px;
+        font-size: 2.2rem;
+    }
+    
+    .sort-btn {
+        padding: 9px 16px;
+        font-size: 0.95rem;
+    }
+    
+    .reset-btn {
+        font-size: 1.5rem;
+        padding: 11px 22px;
     }
 }
 
