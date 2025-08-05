@@ -4,8 +4,17 @@
     box-sizing: border-box;
 }
 
+@font-face {
+    font-family: 'HYWenHei-85W';
+    src: url('/fonts/HYWenHei-HEW.woff2') format('woff2'),
+         url('/fonts/HYWenHei-HEW.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 body {
-    font-family: 'HYWenHei', sans-serif;
+    font-family: 'HYWenHei-85W', sans-serif;
     background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
     min-height: 100vh;
     padding: 20px;
